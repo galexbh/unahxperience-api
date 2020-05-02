@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "tsc": "tsc", 
-    "start":"nodemon"
+    "tsc": "tsc",
+    "start": "nodemon"
   },
   "keywords": [],
   "author": "",
