@@ -20,4 +20,4 @@ El proyecto consiste en una plataforma web orienta a estudiantes de la universid
 
 ## Necesario/Necessary 📄
 
-[Node.js]([Node.js](https://nodejs.org/es/) versión 12.X.X en adelante.
+[Node.js](https://nodejs.org/es/) versión 12.X.X en adelante.
