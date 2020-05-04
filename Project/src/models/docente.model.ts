@@ -16,5 +16,5 @@ const DocenteSchema= new mongoose.Schema({
     Aprobado: {type: Boolean,required: true}
 });
 
-export const Docente = mongoose.model<IDocente>("Docentes",DocenteSchema)
+export const Docente = mongoose.model<IDocente>("Docente",DocenteSchema)
 

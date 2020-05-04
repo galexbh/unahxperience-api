@@ -18,4 +18,4 @@ const ComentarioSchema = new mongoose.Schema({
     ODocente: {type: mongoose.Schema.Types.ObjectId, ref: "Docente"}
 });
 
-export const Comentario = mongoose.model<IComentario>("Comentarios",ComentarioSchema);
+export const Comentario = mongoose.model<IComentario>("Comentario",ComentarioSchema);

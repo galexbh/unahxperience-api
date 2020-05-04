@@ -9,6 +9,6 @@ export class CarreraController{
     }
     private routes(){
         this.app.route("/carrera").post(this.Carr_Service.NuevaCarrera);
-        console.log("Cont");
+        this.app.route("/carreras").get(this.Carr_Service.getAllCarreras);
     }
 }
