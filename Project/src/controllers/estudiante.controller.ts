@@ -9,6 +9,6 @@ export class EstudianteController{
     }
     private routes(){
         this.app.route("/estudiante").post(this.Est_Service.NuevoEstudiante);
-        this.app.route("/estudiantec").get(this.Est_Service.getALL);
+        // this.app.route("/estudiantes").get(this.Est_Service.getAllEstudiantes);
     }
 }

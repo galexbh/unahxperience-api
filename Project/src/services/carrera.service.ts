@@ -47,3 +47,15 @@ export class CarreraService extends CarreraHelpers{
     }
 
 }
+
+export function getCarrera(nombrecarrera: string):Promise<any>{
+    return new Promise<any>( resolve => {
+        Carrera.findOne({ NombreCarrera: nombrecarrera}, (err:any,data:any) => {//Duda
+            if(err){
+                resolve({});
+            }else{
+                resolve(data);
+            }
+        } );
+    });
+}
