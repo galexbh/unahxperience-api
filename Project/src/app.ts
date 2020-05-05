@@ -3,6 +3,8 @@ import express,{Application} from "express";
 import {MainController} from "./controllers/main.controller";
 import {ProveedorController} from "./controllers/proveedor.controller";
 import {ProductoController} from "./controllers/producto.controller";
+import {CarreraController} from "./controllers/carrera.controller";
+import {EstudianteController} from "./controllers/estudiante.controller";
 
 import bodyParser from "body-parser";
 import cors from "cors";
@@ -17,7 +19,8 @@ class App{
     public mainController: MainController;
     public proveedorController: ProveedorController;
     public productoController: ProductoController;
-
+    public carreraController: CarreraController;
+    public estudianteController: EstudianteController;
     constructor(){        
         this.app = express();
         
@@ -26,6 +29,8 @@ class App{
         this.mainController = new MainController(this.app);        
         this.proveedorController = new ProveedorController(this.app);
         this.productoController = new ProductoController(this.app);
+        this.carreraController = new CarreraController(this.app);
+        this.estudianteController = new EstudianteController(this.app);
     }
     private setConfig(){
         this.app.use(bodyParser.json({limit:"50mb"}));
