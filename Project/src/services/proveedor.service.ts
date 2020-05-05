@@ -6,6 +6,9 @@ import {Producto,IProducts} from "../models/product.model";
 import { MongooseDocument } from "mongoose";
 import { resolve } from "dns";
 
+var SimpleCrypto = require("simple-crypto-js").default;
+var _secretKey = "some-unique-key";
+var simpleCrypto = new SimpleCrypto(_secretKey);
 
 
 
@@ -84,6 +87,7 @@ export class ProveedorService extends ProveedorHelpers{
 
     public NewOne(req: Request, res: Response){
         const p = new Proveedor(req.body);
+        p.name = simpleCrypto.encrypt(p.name);
         p.save((err:Error, proveedor: IProveedor)=>{
             if(err){
                 res.status(401).send(err);
