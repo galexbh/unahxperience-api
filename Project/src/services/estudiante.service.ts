@@ -5,6 +5,8 @@ import { MongooseDocument } from "mongoose";
 var SimpleCrypto = require("simple-crypto-js").default;
 var _secretKey = "some-unique-key";
 var simpleCrypto = new SimpleCrypto(_secretKey);
+import { getCarrera } from "../services/carrera.service";
+import { Carrera, ICarrera } from "../models/carrera.model";
 
 class EstudianteHelpers{
 
@@ -27,9 +29,9 @@ export class EstudianteService extends EstudianteHelpers{
             {
                 "$lookup":{
                     from:"carreras",
-                    localfield:"Carrera_1",
+                    localfield:"Carrera",
                     foreingField:"_id",
-                    as: "carreras"
+                    as: "carrera"
                 }
             }
         ],(err: Error, data:any)=>{
@@ -41,25 +43,48 @@ export class EstudianteService extends EstudianteHelpers{
         })
     }    
 
+
+
     public async nuevoEstudiante(req: Request, res: Response) {
         const OEstudiante= new Estudiante(req.body);
-        OEstudiante.Password=simpleCrypto.encrypt(req.body.Password);
-        OEstudiante.Carreras=
-        OEstudiante.save((err:Error, estudiante: IEstudiante)=>{
+        const CarreraExiste1: any = await getCarrera(req.body.Carrera1);
+        const CarreraExiste2: any = await getCarrera(req.body.Carrera2);
+        console.log(req.body.Carreras);
+
+        OEstudiante.Carrera1=CarreraExiste1
+        OEstudiante.Carrera2=CarreraExiste2
+        console.log(req.body.Carreras);
+        if (CarreraExiste1 != null){
+            await OEstudiante.save((err: Error, estudiante: IEstudiante)=>{
+                if(err){
+                    res.status(401).send(err);
+                }
+                res.status(200).json(Estudiante ?{"successed": true, "Estudiante": estudiante} : {"successed": false})
+            });
+    
+        }else{
+            res.status(200).json({successed:false});
+        }
+    
+    }
+/*     public GetProducto(req:Request,res:Response){
+        Producto.findById(req.params.id).populate("proveedor").exec((err:Error,producto:IProducts)=>{
             if(err){
-                res.status(401).send(err);
+                res.status(401).json(err);
+            }else{
+                res.status(200).json(producto);
             }
-            res.status(200).json( estudiante? {"successed":true, "Proveedor": estudiante } : {"successed":false} );
+            
         });
-    } 
-/* 
-    public getAllEstudiantes(req:Request, res:Response){
-        Estudiante.find({},(err: Error, estudiantes: MongooseDocument)=> {
+    } */
+/*     public getAllEstudiantes(req:Request, res:Response){
+      
+        Estudiante.find({}).populate({ path: 'NombreCarrera', model: Carreras}).exec((err: Error, estudiantes: MongooseDocument)=> {
             if(err){
                 res.status(401).send(err);
             }else{
                 res.status(200).json(estudiantes);
             }
         });
-    } */
+    }  */
 }
