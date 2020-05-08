@@ -1,30 +1,84 @@
 import { Request, Response } from "express";
 import { Estudiante, IEstudiante } from "../models/estudiante.model";
 import { MongooseDocument } from "mongoose";
-
-var SimpleCrypto = require("simple-crypto-js").default;
-var _secretKey = "some-unique-key";
-var simpleCrypto = new SimpleCrypto(_secretKey);
 import { getCarrera } from "../services/carrera.service";
-import { Carrera, ICarrera } from "../models/carrera.model";
+
+var CryptoJS = require("crypto-js");
 
 class EstudianteHelpers{
-
-    GetEstudiante(id_est: string):Promise<IEstudiante>{        
-        return new Promise<IEstudiante>( (resolve) => {
-            Estudiante.findById(id_est,(err:Error,estudiante:IEstudiante)=>{
+    public getOneEstudiante(nickname: string):Promise<any>{
+        return new Promise<any>( resolve => {
+            Estudiante.findOne({ NickName: nickname}, (err:any,data:any) => {
                 if(err){
-                    console.log(err);
+                    resolve({});
+                }else{
+                    resolve(data);
                 }
-                resolve(estudiante);
-            }); 
+            } );
         });
     }
+
+
 }
 
 export class EstudianteService extends EstudianteHelpers{
+   
+    public async NewEstudiante(req: Request, res: Response) {
+        const OEstudiante= new Estudiante(req.body);
+        const CarreraExiste1db: any = await getCarrera(req.body.Carrera1);
+        const CarreraExiste2db: any = await getCarrera(req.body.Carrera2);
 
-    public getAll(req: Request, res: Response){
+        const NickRepitkdb: any = await super.getOneEstudiante(req.body.NickName);
+        const EmailRepitdb: any = await super.getOneEstudiante(req.body.Email);
+
+        OEstudiante.Carrera1=CarreraExiste1db
+        OEstudiante.Carrera2=CarreraExiste2db
+        OEstudiante.Password=CryptoJS.AES.encrypt(req.body.Password, 'password').toString(); 
+        
+        if ((CarreraExiste1db != null) && (NickRepitkdb == null) && (EmailRepitdb == null)){
+            await OEstudiante.save((err: Error, estudiante: IEstudiante)=>{
+                if(err){
+                    res.status(401).send(err);
+                }
+                res.status(200).json(Estudiante ?{"successed": true, "Estudiante": estudiante} : {"successed": false})
+            });
+    
+        }else{
+            res.status(400).json({successed:false, carrera:CarreraExiste1db, nick:NickRepitkdb, email:NickRepitkdb});
+        }
+    
+    }
+
+    public async login(req: Request, res: Response) {
+        const OLogin = (req.body.Password);       
+        const OLogindb: any = await super.getOneEstudiante(req.body.NickName);
+
+        var bytes  = CryptoJS.AES.decrypt(OLogindb.Password, 'password');
+        var originalText = bytes.toString(CryptoJS.enc.Utf8);
+
+        if(OLogindb != null){
+            if(OLogin != originalText){
+                res.status(400).send('Password error')
+            }else{
+                res.status(200).json(Estudiante ?{"successed": true} : {"successed": false})
+            }
+        }else{
+            res.status(400).send('NickName error');
+        }
+    }
+/* 
+    public getAllEstudiantes(req:Request, res:Response){
+      
+        Estudiante.find({}).populate({ path: 'NombreCarrera', model: Carreras}).exec((err: Error, estudiantes: MongooseDocument)=> {
+            if(err){
+                res.status(401).send(err);
+            }else{
+                res.status(200).json(estudiantes);
+            }
+        });
+    }  
+ */
+/* public getALL(req: Request, res: Response){
         Estudiante.aggregate([
             {
                 "$lookup":{
@@ -42,49 +96,6 @@ export class EstudianteService extends EstudianteHelpers{
             }
         })
     }    
+*/
 
-
-
-    public async nuevoEstudiante(req: Request, res: Response) {
-        const OEstudiante= new Estudiante(req.body);
-        const CarreraExiste1: any = await getCarrera(req.body.Carrera1);
-        const CarreraExiste2: any = await getCarrera(req.body.Carrera2);
-        console.log(req.body.Carreras);
-
-        OEstudiante.Carrera1=CarreraExiste1
-        OEstudiante.Carrera2=CarreraExiste2
-        console.log(req.body.Carreras);
-        if (CarreraExiste1 != null){
-            await OEstudiante.save((err: Error, estudiante: IEstudiante)=>{
-                if(err){
-                    res.status(401).send(err);
-                }
-                res.status(200).json(Estudiante ?{"successed": true, "Estudiante": estudiante} : {"successed": false})
-            });
-    
-        }else{
-            res.status(200).json({successed:false});
-        }
-    
-    }
-/*     public GetProducto(req:Request,res:Response){
-        Producto.findById(req.params.id).populate("proveedor").exec((err:Error,producto:IProducts)=>{
-            if(err){
-                res.status(401).json(err);
-            }else{
-                res.status(200).json(producto);
-            }
-            
-        });
-    } */
-/*     public getAllEstudiantes(req:Request, res:Response){
-      
-        Estudiante.find({}).populate({ path: 'NombreCarrera', model: Carreras}).exec((err: Error, estudiantes: MongooseDocument)=> {
-            if(err){
-                res.status(401).send(err);
-            }else{
-                res.status(200).json(estudiantes);
-            }
-        });
-    }  */
 }
