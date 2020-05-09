@@ -10,6 +10,10 @@ export class EstudianteController{
     private routes(){
         this.app.route("/estudiante/registro").post(this.Est_Service.NewEstudiante);
         this.app.route("/estudiante/login").post(this.Est_Service.login);
+        
+        this.app.route("/estudiante/:mod")
+        .put(this.Est_Service.Update)
+        .get((this.Est_Service.getEstudiante))
         //this.app.route("/estudiantes").get(this.Est_Service.getALL);
     }
 }

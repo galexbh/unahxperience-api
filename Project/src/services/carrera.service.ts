@@ -46,8 +46,15 @@ export class CarreraService extends CarreraHelpers{
     
     }
 
-    
-
+    public Update(req: Request,res: Response){
+        console.log("entro");
+        Carrera.findByIdAndUpdate(req.params.id_prov,req.body,(err:Error, proveedor:any)=>{
+            if(err){
+                res.status(401).send(err);
+            }
+            res.status(200).json( proveedor? {"updated":true} : {"updated":false} );
+        })
+    }
 }
 
 export function getCarrera(nombrecarrera: string):Promise<any>{

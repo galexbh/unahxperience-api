@@ -5,15 +5,15 @@ import { Interface } from "readline";
 export interface IDocente extends mongoose.Document{
     NombreDocente: string;
     Facultad: string;
-    OCurso: ICurso;
     Aprobado: boolean;
+    OCurso: ICurso;
 }
 
 const DocenteSchema= new mongoose.Schema({
     NombreDocente: {type: String, required: true},
     Facultad: {type: String, required: true},
-    OCurso: {type: mongoose.Schema.Types.ObjectId, ref: "Curso"},
-    Aprobado: {type: Boolean,required: true}
+    Aprobado: {type: Boolean,required: true},
+    OCurso: {type: mongoose.Schema.Types.ObjectId, ref: "Curso"}
 });
 
 export const Docente = mongoose.model<IDocente>("Docente",DocenteSchema)
