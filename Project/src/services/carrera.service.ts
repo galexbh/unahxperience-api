@@ -19,6 +19,7 @@ class CarreraHelpers{
 }
 
 export class CarreraService extends CarreraHelpers{
+
     public getAllCarreras(req:Request, res:Response){
         Carrera.find({},(err: Error, carreras: MongooseDocument)=> {
             if(err){
@@ -29,7 +30,7 @@ export class CarreraService extends CarreraHelpers{
         });
     }
 
-    public async  NuevaCarrera(req: Request, res: Response){
+    public async NuevaCarrera(req: Request, res: Response){
         const OCarrera= new Carrera(req.body);
         const old_Carrera: any = await super.getCarrera({_id:OCarrera._id});
         if (old_Carrera.length === 0 ){
@@ -55,6 +56,7 @@ export class CarreraService extends CarreraHelpers{
             res.status(200).json( proveedor? {"updated":true} : {"updated":false} );
         })
     }
+
 }
 
 export function getCarrera(nombrecarrera: string):Promise<any>{

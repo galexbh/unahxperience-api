@@ -1,13 +1,13 @@
 import { Request, Response } from "express";
-import { Docente, IDocente } from "../models/docente.model";
+import { Curso, ICurso } from "../models/curso.model";
+import {getCarrera } from "../services/carrera.service";
 import { MongooseDocument } from "mongoose";
-import { Curso } from "../models/curso.model";
 
 class CursoHelpers{
 
     public getOneCurso(nombreCurso: string):Promise<any>{
         return new Promise<any>( resolve => {
-            Docente.findOne({ NombreCurso: nombreCurso}, (err:any,data:any) => {
+            Curso.findOne({ NombreCurso: nombreCurso}, (err:any,data:any) => {
                 if(err){
                     resolve({});
                 }else{
@@ -20,22 +20,21 @@ class CursoHelpers{
 
 export class CursoService extends CursoHelpers{
    
-    public async NewDocente(req: Request, res: Response) {
-        const ODocente= new Docente(req.body);
-        //const old_Docente: any = await super.getOneDocente({_id:ODocente._id});
-        if (ODocente){
-            await ODocente.save((err: Error, docente: IDocente)=>{
+    public async NewCurso(req: Request, res: Response) {
+        const OCurso= new Curso(req.body);
+        const CarreraExiste1db: any = await getCarrera(req.body.Carrera1);
+        OCurso.CarreraID=CarreraExiste1db;
+        
+        OCurso.save((err: Error, curso: ICurso)=>{
                 if(err){
                     res.status(401).send(err);
                 }else{
-                    res.status(200).json(Docente ? {"successed": true, "Docente": docente} : {"successed": false});
+                    res.status(200).json(Curso ? {"successed": true, "curso": curso} : {"successed": false});
                 }           
             });
-        }else{
-            res.status(200).json({successed:false});
         }
-    }   
-}
+}  
+
 
 export function getCurso(nombreCurso: string):Promise<any>{
     return new Promise<any>( resolve => {

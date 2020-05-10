@@ -6,9 +6,6 @@ import {Producto,IProducts} from "../models/product.model";
 import { MongooseDocument } from "mongoose";
 import { resolve } from "dns";
 
-
-
-
 class ProveedorHelpers{
 
     GetProveedor(id_prov: string):Promise<IProveedor>{        
