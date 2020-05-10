@@ -8,7 +8,6 @@ export interface IForo extends mongoose.Document{
     Description: String;
     date: string;
     like: string;
-    AccountNumber: number;  
     RateStart: IRate;
     Estudiante_id: IEstudiante;
     Comentario_id : IComentario;
@@ -16,14 +15,13 @@ export interface IForo extends mongoose.Document{
 }
 
 const ForoSchema= new mongoose.Schema({
-    NickName: {type: String, required: true},
-    Name: {type: String, required: true},
-    LastName: {type: String, required: true},
-    Email: {type: String, required: true},
-    Password: {type: String, required: true},
-    AccountNumber: {type: String, required: true},
-    Rol: {type: String, required: true},
-    Carrera1: {type: mongoose.Schema.Types.ObjectId, ref: "Carrera", required: true},
+    Title: {type: String, required: true},
+    Description: {type: String, required: true},
+    date: {type: String, required: true},
+    like: {type: String, required: true},
+    RateStart: {type: String, required: true},
+    Estudiante_id: {type: String, required: true},
+    Comentario_id: {type: mongoose.Schema.Types.ObjectId, ref: "Carrera", required: true},
     
 });
 
