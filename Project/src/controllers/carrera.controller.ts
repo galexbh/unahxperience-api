@@ -11,6 +11,6 @@ export class CarreraController{
         this.app.route("/carrera").post(this.Carr_Service.NuevaCarrera);
         this.app.route("/carreras").get(this.Carr_Service.getAllCarreras);
 
-        this.app.route("/carreras/:id_prov").get(this.Carr_Service.Update);
+        this.app.route("/carreras/:id_car").get(this.Carr_Service.Update);
     }
 }

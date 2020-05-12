@@ -15,6 +15,6 @@ export class EstudianteController{
         this.app.route("/estudiante/:nick")
         .get(this.Est_Service.getEstudiante)
         .put(this.Est_Service.updateEstudiante)
-        //this.app.route("/estudiantes").get(this.Est_Service.getALL);
+        
     }
 }

@@ -49,7 +49,7 @@ export class CarreraService extends CarreraHelpers{
 
     public Update(req: Request,res: Response){
         console.log("entro");
-        Carrera.findByIdAndUpdate(req.params.id_prov,req.body,(err:Error, proveedor:any)=>{
+        Carrera.findByIdAndUpdate(req.params.id_car,req.body,(err:Error, proveedor:any)=>{
             if(err){
                 res.status(401).send(err);
             }

@@ -19,10 +19,21 @@ class CursoHelpers{
 }
 
 export class CursoService extends CursoHelpers{
+
+    public getAll(req:Request, res:Response){
+        Curso.find({},(err:Error, curso: MongooseDocument)=>{
+            if(err){
+                res.status(401).send(err);
+            }else{
+                res.status(200).json(curso);
+            }
+            
+        });
+    }
    
     public async NewCurso(req: Request, res: Response) {
         const OCurso= new Curso(req.body);
-        const CarreraExiste1db: any = await getCarrera(req.body.Carrera1);
+        const CarreraExiste1db: any = await getCarrera(req.body.CarreraID);
         OCurso.CarreraID=CarreraExiste1db;
         
         OCurso.save((err: Error, curso: ICurso)=>{

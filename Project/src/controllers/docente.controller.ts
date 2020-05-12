@@ -10,6 +10,6 @@ export class DocenteController{
     private routes(){
         this.app.route("/docente/registro").post(this.Doct_Service.NewDocente);
         
-        //this.app.route("/docentes").get(this.Doct_Service.getALL);
+        
     }
 }

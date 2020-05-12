@@ -8,8 +8,9 @@ export class CursoController{
         this.routes();
     }
     private routes(){
-        this.app.route("/curso/registro").post(this.Curs_Service.NewCurso);
+        this.app.route("/curso").post(this.Curs_Service.NewCurso);
+        this.app.route("/curso").get(this.Curs_Service.getAll);
         
-        //this.app.route("/docentes").get(this.Doct_Service.getALL);
+        
     }
 }
