@@ -1,16 +1,14 @@
 import { Request, Response } from "express";
 import { Estudiante, IEstudiante } from "../models/estudiante.model";
 import { MongooseDocument } from "mongoose";
-import { getCarrera } from "../services/carrera.service";
+import {getCarrera } from "../services/carrera.service";
 
+var CryptoJS = require("crypto-js");
 
-var SimpleCrypto = require("simple-crypto-js").default;
-var _secretKey = "some-unique-key";
-var simpleCrypto = new SimpleCrypto(_secretKey);
+class EstudianteHelpers{
 
-
-class EstuudianteHelpers{
     public getOneEstudiante(nickname: string):Promise<any>{
+        console.log(nickname)
         return new Promise<any>( resolve => {
             Estudiante.findOne({ NickName: nickname}, (err:any,data:any) => {
                 if(err){
@@ -22,11 +20,123 @@ class EstuudianteHelpers{
         });
     }
 
+    public getEmailEstudiante(email: string):Promise<any>{
+        return new Promise<any>( resolve => {
+            Estudiante.findOne({ Email: email}, (err:any,data:any) => {
+                if(err){
+                    resolve({});
+                }else{
+                    resolve(data);
+                }
+            } );
+        });
+    }
+
+    public getArrayEstudiante(nickname: string):Promise<any>{
+        console.log(nickname)
+        return new Promise<any>( resolve => {
+            Estudiante.find({"Carrera1": { "$elemMatch": { "_id": nickname } }}, (err:any,data:any) => {
+                if(err){
+                    resolve({});
+                }else{
+                    resolve(data);
+                }
+            } );
+        });
+    }
+
+    TestGet(est: IEstudiante):Promise<number>{        
+        return new Promise<number>( resolve => {
+            Estudiante.aggregate([
+                { "$match": { "NickName": est.NickName }}                
+              ],(err:Error, data:any)=>{
+                resolve(data);
+              }) 
+        });
+    }
 
 }
 
-export class EstudianteService extends EstuudianteHelpers{
-    public getALL(req: Request, res: Response){
+export class EstudianteService extends EstudianteHelpers{
+
+    public getAll(req:Request, res:Response){
+        Estudiante.find({},(err:Error, estudiante: MongooseDocument)=>{
+            if(err){
+                res.status(401).send(err);
+            }else{
+                res.status(200).json(estudiante);
+            }
+            
+        });
+    }
+
+    public async newEstudiante(req: Request, res: Response) {
+        const OEstudiante= new Estudiante(req.body);        
+        const CarreraExiste1db: any = await getCarrera(req.body.Carrera1[0]);
+
+        if(req.body.Carrera1[1] != undefined){
+        const CarreraExiste2db: any = await getCarrera(req.body.Carrera1[1]);
+        OEstudiante.Carrera1.push(CarreraExiste1db,CarreraExiste2db)
+        }
+        OEstudiante.Carrera1.push(CarreraExiste1db)
+
+        const NickRepitdb: any = await super.getOneEstudiante(req.body.NickName);
+        const EmailRepitdb: any = await super.getEmailEstudiante(req.body.Email);        
+
+        OEstudiante.Password=CryptoJS.AES.encrypt(req.body.Password, 'password').toString(); 
+        
+        if ((CarreraExiste1db != null) && (NickRepitdb == null) && (EmailRepitdb == null)){
+            OEstudiante.save((err: Error, estudiante: IEstudiante)=>{
+                if(err){
+                    res.status(401).send(err);
+                }
+                res.status(200).json(Estudiante ?{"successed": true, "Estudiante": estudiante} : {"successed": false})
+            });
+        }else{
+            res.status(400).json({successed:false, carrera:CarreraExiste1db, nick:NickRepitdb, email:EmailRepitdb});
+        }
+    }
+
+    public async login(req: Request, res: Response) {
+        const OPassword = (req.body.Password);       
+        const OLogindb: any = await super.getOneEstudiante(req.body.NickName);
+
+        var bytes  = CryptoJS.AES.decrypt(OLogindb.Password, 'password');
+        var originalText = bytes.toString(CryptoJS.enc.Utf8);
+
+        if(OLogindb != null){
+            if(OPassword != originalText){
+                res.status(400).send('Password error')
+            }else{
+                res.status(200).json(Estudiante ?{"successed": true} : {"successed": false})
+            }
+        }else{
+            res.status(400).send('NickName error');
+        }
+    }
+
+    public async getEstudiante(req:Request,res:Response){
+        const OEstudiantedb: any = await super.getOneEstudiante(req.params.nick);
+        const OEstudiantedb1: any = await super.TestGet(OEstudiantedb)
+        res.send(OEstudiantedb1);
+    }
+
+
+    public async updateEstudiante(req: Request, res: Response) {
+        const OEstudiantedb: any = await super.getOneEstudiante(req.params.nick);    
+        
+        Estudiante.findByIdAndUpdate(OEstudiantedb._id,req.body,(err:Error, estudiante:any)=>{
+            if(err){
+                res.status(401).send(err);
+            }else{
+            res.status(200).send(estudiante);
+        }
+        })
+    }
+
+}
+
+  /* public getAll(req: Request, res: Response){
         Estudiante.aggregate([
             {
                 "$lookup":{
@@ -44,59 +154,33 @@ export class EstudianteService extends EstuudianteHelpers{
             }
         })
     }    
+*/
 
-
-
-    public async NewEstudiante(req: Request, res: Response) {
-        const OEstudiante= new Estudiante(req.body);
-        const CarreraExiste1db: any = await getCarrera(req.body.Carrera1);
-        const CarreraExiste2db: any = await getCarrera(req.body.Carrera2);
-        
-
-        OEstudiante.Carrera1=CarreraExiste1db
-        OEstudiante.Carrera2=CarreraExiste2db
-        OEstudiante.Password=simpleCrypto.encrypt(req.body.Password); 
-
-        if (CarreraExiste1db != null){
-            await OEstudiante.save((err: Error, estudiante: IEstudiante)=>{
-                if(err){
-                    res.status(401).send(err);
-                }
-                res.status(200).json(Estudiante ?{"successed": true, "Estudiante": estudiante} : {"successed": false})
-            });
-    
-        }else{
-            res.status(200).json({successed:false});
-        }
-    
-    }
-
-    public async login(req: Request, res: Response) {
-        const OLogin = (req.body.Password);       
-        const OLogindb: any = await super.getOneEstudiante(req.body.NickName);
-
-        if(OLogindb != null){
-            if(OLogin != simpleCrypto.decrypt(OLogindb.Password)){
-                res.status(400).send('password error')
-            }else{
-                res.status(200).json(Estudiante ?{"successed": true} : {"successed": false})
-            }
-        }else{
-            res.status(400).send('NickName error');
-        }
-    }
-/* 
-    public getAllEstudiantes(req:Request, res:Response){
-      
-        Estudiante.find({}).populate({ path: 'NombreCarrera', model: Carreras}).exec((err: Error, estudiantes: MongooseDocument)=> {
+/*
+    public getEstudiante(req:Request,res:Response){
+        Estudiante.findOne({NickName:req.params.nick}).populate("Carrera1").exec((err:Error,estudiante:IEstudiante)=>{
             if(err){
-                res.status(401).send(err);
+                res.status(401).json(err);
             }else{
-                res.status(200).json(estudiantes);
+                res.status(200).json(estudiante);
             }
+            
         });
-    }  
- */
+    }*/
 
+    //doc.markModified(path)
+    //db.collection.find({"parameters": { "$elemMatch": { "foo": "bar" } }});
 
-}
+/*The $lookup syntax is as follows:
+
+from: it specifies the collection in the database to perform the join with
+
+//Nombre de la collection de la BD a la que queremos cruzar
+
+localField: it is the field from our existing document that we want to look for in the collection
+
+//Campo de la base de datos actual
+
+foreignField: it is a field in the collection specified in the “from” collection
+
+as: the name of the property holding the result. If there are multiple results, it is an array.*/ 

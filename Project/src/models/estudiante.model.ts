@@ -1,4 +1,4 @@
-import mongoose, { Types } from "mongoose";
+import mongoose from "mongoose";
 import { ICarrera } from "../models/carrera.model";
 
 export interface IEstudiante extends mongoose.Document{
@@ -9,8 +9,7 @@ export interface IEstudiante extends mongoose.Document{
     Password: string;
     AccountNumber: number;  
     Rol: string;
-    Carrera1 : ICarrera;
-    Carrera2 : ICarrera;
+    Carrera1 : [ICarrera];
 }
 
 const EstudianteSchema= new mongoose.Schema({
@@ -21,8 +20,7 @@ const EstudianteSchema= new mongoose.Schema({
     Password: {type: String, required: true},
     AccountNumber: {type: String, required: true},
     Rol: {type: String, required: true},
-    Carrera1: {type: mongoose.Schema.Types.ObjectId, ref: "Carrera", required: true},
-    Carrera2: {type: mongoose.Schema.Types.ObjectId, ref: "Carrera", required: false}
+    Carrera1: [{type: mongoose.Schema.Types.Mixed, ref: "Carrera", required: true}],
 });
 
 export const Estudiante = mongoose.model<IEstudiante>("Estudiante",EstudianteSchema);
