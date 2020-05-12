@@ -45,15 +45,7 @@ class EstudianteHelpers{
         });
     }
 
-    TestGet(est: IEstudiante):Promise<number>{        
-        return new Promise<number>( resolve => {
-            Estudiante.aggregate([
-                { "$match": { "NickName": est.NickName }}                
-              ],(err:Error, data:any)=>{
-                resolve(data);
-              }) 
-        });
-    }
+
 
 }
 
@@ -77,8 +69,10 @@ export class EstudianteService extends EstudianteHelpers{
         if(req.body.Carrera1[1] != undefined){
         const CarreraExiste2db: any = await getCarrera(req.body.Carrera1[1]);
         OEstudiante.Carrera1.push(CarreraExiste1db,CarreraExiste2db)
+        }else{
+            OEstudiante.Carrera1.push(CarreraExiste1db)
         }
-        OEstudiante.Carrera1.push(CarreraExiste1db)
+        
 
         const NickRepitdb: any = await super.getOneEstudiante(req.body.NickName);
         const EmailRepitdb: any = await super.getEmailEstudiante(req.body.Email);        
@@ -116,9 +110,8 @@ export class EstudianteService extends EstudianteHelpers{
     }
 
     public async getEstudiante(req:Request,res:Response){
-        const OEstudiantedb: any = await super.getOneEstudiante(req.params.nick);
-        const OEstudiantedb1: any = await super.TestGet(OEstudiantedb)
-        res.send(OEstudiantedb1);
+        const OEstudiantedb: any = await super.getOneEstudiante(req.params.nick);  
+        res.send(OEstudiantedb)  
     }
 
 
