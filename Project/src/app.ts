@@ -2,7 +2,6 @@ import express,{Application} from "express";
 
 import {CarreraController} from "./controllers/carrera.controller";
 import {ComentarioController} from "./controllers/comentario.controller";
-import {CursoController} from "./controllers/curso.controller";
 import {DocenteController} from "./controllers/docente.controller";
 import {EstudianteController} from "./controllers/estudiante.controller";
 import {ForoController} from "./controllers/foro.controller";
@@ -23,7 +22,6 @@ class App{
     public mainController: MainController;
     public estudianteController: EstudianteController;
     public carreraController: CarreraController;
-    public cursoController: CursoController;
     public comentarioController: ComentarioController;
     public foroController: ForoController;
     public rateController: RateController;
@@ -42,7 +40,7 @@ class App{
         this.docenteController = new DocenteController(this.app);
         this.carreraController = new CarreraController(this.app);
         this.estudianteController = new EstudianteController(this.app);
-        this.cursoController = new CursoController(this.app);
+
     }
     private setConfig(){
         this.app.use(bodyParser.json({limit:"50mb"}));

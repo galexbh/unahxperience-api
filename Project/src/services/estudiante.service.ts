@@ -35,7 +35,7 @@ class EstudianteHelpers{
     public getArrayEstudiante(nickname: string):Promise<any>{
         console.log(nickname)
         return new Promise<any>( resolve => {
-            Estudiante.find({"Carrera1": { "$elemMatch": { "_id": nickname } }}, (err:any,data:any) => {
+            Estudiante.find({"Carreras": { "$elemMatch": { "_id": nickname } }}, (err:any,data:any) => {
                 if(err){
                     resolve({});
                 }else{
@@ -64,13 +64,13 @@ export class EstudianteService extends EstudianteHelpers{
 
     public async newEstudiante(req: Request, res: Response) {
         const OEstudiante= new Estudiante(req.body);        
-        const CarreraExiste1db: any = await getCarrera(req.body.Carrera1[0]);
+        const CarreraExiste1db: any = await getCarrera(req.body.Carreras[0]);
 
-        if(req.body.Carrera1[1] != undefined){
-        const CarreraExiste2db: any = await getCarrera(req.body.Carrera1[1]);
-        OEstudiante.Carrera1.push(CarreraExiste1db,CarreraExiste2db)
+        if(req.body.Carreras[1] != undefined){
+        const CarreraExiste2db: any = await getCarrera(req.body.Carreras[1]);
+        OEstudiante.Carreras.push(CarreraExiste1db,CarreraExiste2db)
         }else{
-            OEstudiante.Carrera1.push(CarreraExiste1db)
+            OEstudiante.Carreras.push(CarreraExiste1db)
         }
         
 
@@ -151,7 +151,7 @@ export class EstudianteService extends EstudianteHelpers{
 
 /*
     public getEstudiante(req:Request,res:Response){
-        Estudiante.findOne({NickName:req.params.nick}).populate("Carrera1").exec((err:Error,estudiante:IEstudiante)=>{
+        Estudiante.findOne({NickName:req.params.nick}).populate("Carreras").exec((err:Error,estudiante:IEstudiante)=>{
             if(err){
                 res.status(401).json(err);
             }else{

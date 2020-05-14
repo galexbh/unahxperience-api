@@ -9,7 +9,7 @@ export interface IEstudiante extends mongoose.Document{
     Password: string;
     AccountNumber: number;  
     Rol: string;
-    Carrera1 : [ICarrera];
+    Carreras : [ICarrera];
 }
 
 const EstudianteSchema= new mongoose.Schema({
@@ -20,7 +20,7 @@ const EstudianteSchema= new mongoose.Schema({
     Password: {type: String, required: true},
     AccountNumber: {type: String, required: true},
     Rol: {type: String, required: true},
-    Carrera1: [{type: mongoose.Schema.Types.Mixed, ref: "Carrera", required: true}],
+    Carreras: [{type: mongoose.Schema.Types.Mixed, ref: "Carrera", required: true}],
 });
 
 export const Estudiante = mongoose.model<IEstudiante>("Estudiante",EstudianteSchema);

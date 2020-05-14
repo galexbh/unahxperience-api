@@ -1,11 +1,9 @@
 import mongoose from "mongoose";
 import {IEstudiante} from "./estudiante.model"
-import {ICurso} from "./curso.model"
 
 export interface ISolicitud extends mongoose.Document { 
     Name: string;
     LastName: number;
-    CursoID: ICurso;
     EstudianteID: IEstudiante;
 }
 
