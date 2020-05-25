@@ -1,5 +1,5 @@
 import app from "./app";
 
-app.listen(3001, ()=>{
-    console.log("http://localhost:3001/");
+app.listen(process.env.PORT, ()=>{
+    console.log(`http://localhost:${process.env.PORT}/`);
 });
