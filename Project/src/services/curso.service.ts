@@ -108,7 +108,7 @@ export class CursoService extends CursoHelpers{
             if(err){
                 res.status(401).json({successed:false, message:"server got an error, contact support if this error is still happening"});
             }else{
-                res.status(200).json({successed:true,message:"Language deleted successfully"});
+                res.status(200).json({successed:true,message:"Curso deleted successfully"});
             }
         });
     }

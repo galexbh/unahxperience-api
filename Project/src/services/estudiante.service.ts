@@ -129,28 +129,8 @@ export class EstudianteService extends EstudianteHelpers{
             if(err){
                 res.status(401).json({successed:false, message:"server got an error, contact support if this error is still happening"});
             }else{
-                res.status(200).json({successed:true,message:"Language deleted successfully"});
+                res.status(200).json({successed:true,message:"Estudiante deleted successfully"});
             }
         });
     }
 }
-
-  /* public getAll(req: Request, res: Response){
-        Estudiante.aggregate([
-            {
-                "$lookup":{
-                    from:"carreras",
-                    localfield:"Carrera",
-                    foreingField:"_id",
-                    as: "carrera"
-                }
-            }
-        ],(err: Error, data:any)=>{
-            if(err){
-                res.status(401).send(err);
-            }else{
-                res.status(200).json(data);
-            }
-        })
-    }    
-*/

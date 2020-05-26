@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
 import { Comentario,IComentario  } from "../models/comentario.model";
-import {} from "../services/estudiante.service"; //--
 import { MongooseDocument } from "mongoose";
+
+let moment = require('moment');
 
 class ComentarioHelpers{
 
@@ -68,7 +69,7 @@ export class ComentarioService extends ComentarioHelpers{
 
     public async newComentario(req: Request, res: Response){        
         const comentario = new Comentario(req.body);
-        
+        comentario.FechaComentatio = moment().format('LLLL');
         await comentario.save((err:Error, comentario: IComentario)=>{
             if(err){
                 res.status(401).send(err);
@@ -79,7 +80,7 @@ export class ComentarioService extends ComentarioHelpers{
     }
 
     public async updateComentario(req:Request, res:Response){
-
+        
         Comentario.findByIdAndUpdate(req.params.id,req.body,(err:Error)=>{
             if(err){
                 res.status(401).json({successed:false, message:"server got an error, contact support if this error is still happening"});
