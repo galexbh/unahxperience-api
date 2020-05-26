@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { Curso, ICurso } from "../models/curso.model";
-import {getCarrera } from "../services/carrera.service";
 import { MongooseDocument } from "mongoose";
 
 class CursoHelpers{
@@ -33,8 +32,8 @@ export class CursoService extends CursoHelpers{
    
     public async NewCurso(req: Request, res: Response) {
         const OCurso= new Curso(req.body);
-        const CarreraExiste1db: any = await getCarrera(req.body.CarreraID);
-        OCurso.CarreraID=CarreraExiste1db;
+       // const CarreraExiste1db: any = await getCarrera(req.body.CarreraID);
+      //   OCurso.CarreraID=CarreraExiste1db;
         
         OCurso.save((err: Error, curso: ICurso)=>{
                 if(err){

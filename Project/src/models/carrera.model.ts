@@ -6,7 +6,6 @@ export interface ICarrera extends mongoose.Document{
 }
 
 const CarreraSchema= new mongoose.Schema({
-    _id: {type: String, requerid:true},
     NombreCarrera: {type: String, required:true},
     Facultad: {type: String, required:true}
 });
