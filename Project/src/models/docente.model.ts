@@ -12,7 +12,7 @@ export interface IDocente extends mongoose.Document{
 const DocenteSchema= new mongoose.Schema({
     NombreDocente: {type: String, required: true},
     Aprobado: {type: Boolean,required: true},
-    RateStart: {type: String, required: true},
+    RateStart: {type: mongoose.Schema.Types.ObjectId, ref: "Rate"},
     Curso: {type: mongoose.Schema.Types.ObjectId, ref: "Curso"}
 });
 
