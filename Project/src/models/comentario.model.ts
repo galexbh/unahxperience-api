@@ -2,15 +2,15 @@ import mongoose from "mongoose";
 import { IEstudiante } from "../models/estudiante.model";
 
 export interface IComentario extends mongoose.Document{
-    FechaComentatio: Date;
+    FechaComentatio: String;
     ComentarioE: String;
-    EstudianteID: IEstudiante;
+    Estudiante: IEstudiante;
 }
 
 const ComentarioSchema = new mongoose.Schema({
-    FechaComentatio: {type: Date, required: true},
+    FechaComentatio: {type: String, required: true},
     ComentarioE: {type: String, required: true},
-    EstudianteID: {type: mongoose.Schema.Types.ObjectId, ref: "Estudiante"},
+    Estudiante: {type: mongoose.Schema.Types.ObjectId, ref: "Estudiante"},
 });
 
 export const Comentario = mongoose.model<IComentario>("Comentario",ComentarioSchema);

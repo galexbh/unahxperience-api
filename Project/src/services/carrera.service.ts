@@ -63,4 +63,14 @@ export class CarreraService extends CarreraHelpers{
         })
     }
 
+    public DeleteCarrera(req: Request,res: Response){
+        console.log("entro");
+        Carrera.findByIdAndDelete({_id:req.params.id_car},req.body,(err:Error, carrera:any)=>{
+            if(err){
+                res.status(401).send(err);
+            }
+            res.status(200).json( carrera? {"updated":true} : {"updated":false} );
+        })
+    }
+
 }

@@ -1,19 +1,34 @@
 import { Request, Response } from "express";
 import { Rate, IRate } from "../models/rate.model";
-//import {getEstudiante } from "../services/estudiante.service";
 import { MongooseDocument } from "mongoose";
 
 class RateHelpers{
 
-    public getOneRate(nombreRate: string):Promise<any>{
-        return new Promise<any>( resolve => {
-            Rate.findOne({ NombreRate: nombreRate}, (err:any,data:any) => {
+     //Obtener arreglo de Rate
+
+     GetRate(filter: any):Promise<IRate>{        
+        return new Promise<IRate>( (resolve) => {
+            Rate.find(filter,(err:Error,curso:IRate)=>{
                 if(err){
-                    resolve({});
+                    console.log(err);
                 }else{
-                    resolve(data);
+                    resolve(curso);
                 }
-            } );
+            }); 
+        });
+    }
+
+    //Obtener un Rate
+
+    GetOneRate(filter: any):Promise<IRate>{        
+        return new Promise<IRate>( (resolve) => {
+            Rate.findOne(filter,(err:Error,curso:IRate)=>{
+                if(err){
+                    console.log(err);
+                }else{
+                    resolve(curso);
+                }
+            }); 
         });
     }
 }
@@ -21,40 +36,59 @@ class RateHelpers{
 export class RateService extends RateHelpers{
 
     public getAll(req:Request, res:Response){
-        Rate.find({},(err:Error, rate: MongooseDocument)=>{
+        Rate.aggregate([
+            {
+                "$lookup":{
+                    from: "Estudiantes",
+                    localField:"Estudiante",
+                    foreignField:"_id",
+                    as: "Estudiante"
+                }
+            }
+        ],(err:Error, data:any)=>{
             if(err){
                 res.status(401).send(err);
             }else{
-                res.status(200).json(rate);
+                res.status(200).json(data);
+            } 
+          })
+    }
+
+    public async newOneRate(req: Request, res: Response){        
+        const rate = new Rate(req.body);
+        
+        await rate.save((err:Error, rate: IRate)=>{
+            if(err){
+                res.status(401).send(err);
+            }else{
+                res.status(200).json( Rate? {successed:true, Docente: rate } : {successed:false} );
+            }            
+        });
+    } 
+
+    public async deleteOneRate(req:Request, res:Response){
+        Rate.findByIdAndDelete(req.params.id,(err:Error)=>{
+            if(err){
+                res.status(401).json({successed:false, message:"server got an error, contact support if this error is still happening"});
+            }else{
+                res.status(200).json({successed:true,message:"Rate deleted successfully"});
             }
-            
         });
     }
-   
-    public async newRate(req: Request, res: Response) {
-        const OSolicitud= new Rate(req.body);
-       // const EstudianteExistedb: any = await getEstudiante(req.body.Estudiante_id[0]);
-       // OSolicitud.Estudiante_id.push(EstudianteExistedb);
+
+    public async getOneRate(req:Request, res:Response){
+        const rate:any = await super.GetRate({_id:req.params.id});
+        res.status(200).json(rate[0]);
+    }
+
+    public async updateOneRate(req:Request, res:Response){       
         
-        OSolicitud.save((err: Error, rate: IRate)=>{
-                if(err){
-                    res.status(401).send(err);
-                }else{
-                    res.status(200).json(Rate ? {"successed": true, "rate": rate} : {"successed": false});
-                }           
-            });
-        }
-}  
-
-
-export function getRate(nombreCurso: string):Promise<any>{
-    return new Promise<any>( resolve => {
-        Rate.findOne({ NombreCurso: nombreCurso}, (err:any,data:any) => {
+        Rate.findByIdAndUpdate(req.params.id,req.body,(err:Error)=>{
             if(err){
-                resolve({});
+                res.status(401).json({successed:false, message:"server got an error, contact support if this error is still happening"});
             }else{
-                resolve(data);
+                res.status(200).json({successed:true,message:"Rate updated successfully"});
             }
-        } );
-    });
+        });
+    }
 }

@@ -8,15 +8,15 @@ export interface IForo extends mongoose.Document{
     date: string;
     like: number;
     RateStart: IRate;
-    Comentario_id : IComentario;   
+    Comentario : IComentario;
 }
 const ForoSchema= new mongoose.Schema({
     Title: {type: String, required: true},
     Description: {type: String, required: true},
     date: {type: String, required: true},
     like: {type: Number, required: true},
-    RateStart: {type: String, required: true},
-    Comentario_id: {type: mongoose.Schema.Types.ObjectId, ref: "Comentario", required: true},
+    RateStart: {type: mongoose.Schema.Types.ObjectId, ref: "Rate"},
+    Comentario: {type: mongoose.Schema.Types.ObjectId, ref: "Comentario"},
 });
 
 export const Foro = mongoose.model<IForo>("Foro",ForoSchema);

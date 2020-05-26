@@ -8,8 +8,12 @@ export class ForoController{
         this.routes();
     }
     private routes(){
-        this.app.route("/foro").post(this.for_Service.newForo);
-
-        
+        this.app.route("/foro").post(this.for_Service.newOneForo);
+        this.app.route("/foro").get(this.for_Service.getAll);
+        //Mandar ID 
+        this.app.route("/foro/:id")
+        .get(this.for_Service.getOneForo)
+        .put(this.for_Service.updateOneForo)
+        .delete(this.for_Service.deleteOneForo);
     }
 }

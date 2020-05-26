@@ -8,8 +8,12 @@ export class RateController{
         this.routes();
     }
     private routes(){
-        this.app.route("/rate").post(this.rate_Service.newRate);
-
-        
+        this.app.route("/rate").post(this.rate_Service.newOneRate);
+        this.app.route("/rate").get(this.rate_Service.getAll);
+        //Mandar ID 
+        this.app.route("/rate/:id")
+        .get(this.rate_Service.getOneRate)
+        .put(this.rate_Service.updateOneRate)
+        .delete(this.rate_Service.deleteOneRate);        
     }
 }

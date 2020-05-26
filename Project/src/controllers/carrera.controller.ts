@@ -9,10 +9,12 @@ export class CarreraController{
     }
     private routes(){
         this.app.route("/carrera").post(this.Carr_Service.NuevaCarrera);
-        this.app.route("/carrera").get(this.Carr_Service.getOneCarrera);
         this.app.route("/carreras").get(this.Carr_Service.getAllCarreras);
+        //Mandar el Nombre
         this.app.route("/carrera/:c_name").get(this.Carr_Service.getCarrera);
-
-       this.app.route("/carrera/:id_car").put(this.Carr_Service.UpdateCarrera);
+        //Mandar el ID
+       this.app.route("/carrera/:id_car")
+       .put(this.Carr_Service.UpdateCarrera)
+       .delete(this.Carr_Service.DeleteCarrera);
     }
 }

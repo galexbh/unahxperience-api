@@ -5,15 +5,31 @@ import { MongooseDocument } from "mongoose";
 
 class ComentarioHelpers{
 
-    public getOneComentario(nombreComentario: string):Promise<any>{
-        return new Promise<any>( resolve => {
-            Comentario.findOne({ NombreComentario: nombreComentario}, (err:any,data:any) => {
+    //Obtener arreglo de Comentario
+
+    GetComentario(filter: any):Promise<IComentario>{        
+        return new Promise<IComentario>( (resolve) => {
+            Comentario.find(filter,(err:Error,comentario:IComentario)=>{
                 if(err){
-                    resolve({});
+                    console.log(err);
                 }else{
-                    resolve(data);
+                    resolve(comentario);
                 }
-            } );
+            }); 
+        });
+    }
+
+    //Obtener un Comentario
+
+    GetOneComentario(filter: any):Promise<IComentario>{        
+        return new Promise<IComentario>( (resolve) => {
+            Comentario.findOne(filter,(err:Error,comentario:IComentario)=>{
+                if(err){
+                    console.log(err);
+                }else{
+                    resolve(comentario);
+                }
+            }); 
         });
     }
 }
@@ -21,41 +37,65 @@ class ComentarioHelpers{
 export class ComentarioService extends ComentarioHelpers{
 
     public getAll(req:Request, res:Response){
-        Comentario.find({},(err:Error, comentario: MongooseDocument)=>{
+        Comentario.aggregate([
+            {
+                "$lookup":{
+                    from: "Estudiantes",
+                    localField:"Estudiante",
+                    foreignField:"_id",
+                    as: "Estudent"
+                }
+            }
+        ],(err:Error, data:any)=>{
             if(err){
                 res.status(401).send(err);
+            }else{
+                res.status(200).json(data);
+            } 
+          })
+    }
+
+    public getComentario(req:Request,res:Response){
+        Comentario.findById(req.params.id).populate("Estudiante").exec((err:Error,comentario:IComentario)=>{
+            if(err){
+                res.status(401).json(err);
             }else{
                 res.status(200).json(comentario);
             }
             
         });
     }
-   
-    public async NewComentario(req: Request, res: Response) {
-        console.log('entra')
-        const OComentario= new Comentario(req.body);
-       // const EstudianteExistentedb: any = await getEstudiante(req.body.EstudianteID);
-       // OComentario.EstudianteID=EstudianteExistentedb;
+
+    public async newComentario(req: Request, res: Response){        
+        const comentario = new Comentario(req.body);
         
-        OComentario.save((err: Error, comentario: IComentario)=>{
-                if(err){
-                    res.status(401).send(err);
-                }else{
-                    res.status(200).json(Comentario ? {"successed": true, "Comentario": comentario} : {"successed": false});
-                }           
-            });
-        }
-}  
-
-
-export function getCurso(nombreCurso: string):Promise<any>{
-    return new Promise<any>( resolve => {
-        Comentario.findOne({ NombreCurso: nombreCurso}, (err:any,data:any) => {
+        await comentario.save((err:Error, comentario: IComentario)=>{
             if(err){
-                resolve({});
+                res.status(401).send(err);
             }else{
-                resolve(data);
+                res.status(200).json( Comentario? {successed:true, comentario: comentario} : {successed:false} );
+            }            
+        });
+    }
+
+    public async updateComentario(req:Request, res:Response){
+
+        Comentario.findByIdAndUpdate(req.params.id,req.body,(err:Error)=>{
+            if(err){
+                res.status(401).json({successed:false, message:"server got an error, contact support if this error is still happening"});
+            }else{
+                res.status(200).json({successed:true,message:"Comentario updated successfully"});
             }
-        } );
-    });
+        })
+    }
+
+    public async deleteComentario(req:Request, res:Response){
+        Comentario.findByIdAndDelete(req.params.id,(err:Error)=>{
+            if(err){
+                res.status(401).json({successed:false, message:"server got an error, contact support if this error is still happening"});
+            }else{
+                res.status(200).json({successed:true,message:"Comentario deleted successfully"});
+            }
+        });
+    }
 }

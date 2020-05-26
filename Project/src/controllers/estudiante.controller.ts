@@ -11,10 +11,12 @@ export class EstudianteController{
         this.app.route("/estudiante/registro").post(this.Est_Service.newEstudiante);
         this.app.route("/estudiante/login").post(this.Est_Service.login);
         this.app.route("/estudiante").get(this.Est_Service.getAll);
-        
-
+        //Busca por nickName
         this.app.route("/estudiante/:nick")
         .get(this.Est_Service.getEstudiante)
-        .put(this.Est_Service.updateEstudiante)
+        //Mandar id
+        this.app.route("/estudiante/:id")
+        .put(this.Est_Service.updateEstudiante) //requiere NickName para actualizar
+        .delete(this.Est_Service.deleteOneEstudiante);
     }
 }

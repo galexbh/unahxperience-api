@@ -8,9 +8,12 @@ export class CursoController{
         this.routes();
     }
     private routes(){
-        this.app.route("/curso").post(this.Curs_Service.NewCurso);
+        this.app.route("/curso").post(this.Curs_Service.newOneCurso);
         this.app.route("/curso").get(this.Curs_Service.getAll);
-        
-        
+        //Mandar ID 
+        this.app.route("/curso/:id")
+        .get(this.Curs_Service.getCurso)
+        .put(this.Curs_Service.updateOneCurso)
+        .delete(this.Curs_Service.deleteOneCurso);
     }
 }
