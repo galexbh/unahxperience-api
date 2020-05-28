@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import { Foro, IForo } from "../models/foro.models";
 import { MongooseDocument } from "mongoose";
 
+let moment = require('moment');
+
 class ForoHelpers{
 
     //Obtener arreglo de Foro
@@ -38,19 +40,11 @@ export class ForoService extends ForoHelpers{
     public getAll(req:Request, res:Response){
         Foro.aggregate([
             {
-                    "$lookup":{
-                    from: "Rates",
-                    localField:"RateStart",
-                    foreignField:"_id",
-                    as: "rate"
-                }
-            },
-            {
                 "$lookup":{
-                    from: "Estudiantes",
-                    localField:"Estudiante",
+                    from: "comentarios",
+                    localField:"ComentarioID",
                     foreignField:"_id",
-                    as: "estudiante"
+                    as: "Comentarios"
                 }
             }
         ],(err:Error, data:any)=>{
@@ -64,7 +58,7 @@ export class ForoService extends ForoHelpers{
 
     public async newOneForo(req: Request, res: Response){        
         const foro = new Foro(req.body);
-    
+        foro.date = moment().format('LLLL');
         await foro.save((err:Error, foro: IForo)=>{
             if(err){
                 res.status(401).send(err);

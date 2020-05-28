@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { Curso, ICurso } from "../models/curso.model";
 import { MongooseDocument } from "mongoose";
-import {CarreraService} from "../services/carrera.service";
+
 class CursoHelpers{
 
         
@@ -40,8 +40,8 @@ export class CursoService extends CursoHelpers{
         Curso.aggregate([
             {
                 "$lookup":{
-                    from: "Carreras",
-                    localField:"Carrera",
+                    from: "carreras",
+                    localField:"CarreraID",
                     foreignField:"_id",
                     as: "c"
                 }

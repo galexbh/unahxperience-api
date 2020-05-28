@@ -5,15 +5,15 @@ import {ICurso} from "./curso.model"
 export interface ISolicitud extends mongoose.Document { 
     Name: string;
     LastName: number;
-    Curso: ICurso;
-    Estudiante: IEstudiante;
+    CursoID: ICurso;
+    EstudianteID: IEstudiante;
 }
 
 const SolicitudSchema = new mongoose.Schema({
     name: { type: String, required: true},
     LastName: {type: String, required: true},
-    Curso: {type: mongoose.Schema.Types.ObjectId, ref: "Curso"},
-    Estudiante: { type: mongoose.Schema.Types.ObjectId, ref: "Estudiante" }
+    CursoID: {type: mongoose.Schema.Types.ObjectId, ref: "Curso"},
+    EstudianteID: { type: mongoose.Schema.Types.ObjectId, ref: "Estudiante" }
 });
 
 

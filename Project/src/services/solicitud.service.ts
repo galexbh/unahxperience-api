@@ -38,17 +38,9 @@ export class SolicitudService extends SolicitudHelpers{
     public getAll(req:Request, res:Response){
         Solicitud.aggregate([
             {
-                    "$lookup":{
-                    from: "Cursos",
-                    localField:"Curso",
-                    foreignField:"_id",
-                    as: "Curso"
-                }
-            },
-            {
                 "$lookup":{
-                    from: "Estudiantes",
-                    localField:"Estudiante",
+                    from: "estudiantes",
+                    localField:"EstudianteID",
                     foreignField:"_id",
                     as: "Estudiante"
                 }

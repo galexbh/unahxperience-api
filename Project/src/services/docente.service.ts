@@ -41,8 +41,8 @@ export class DocenteService extends DocenteHelpers{
         Docente.aggregate([
             {
                 "$lookup":{
-                    from: "Cursos",
-                    localField:"curso",
+                    from: "cursos",
+                    localField:"CursoID",
                     foreignField:"_id",
                     as: "cursos"
                 }
@@ -89,11 +89,11 @@ export class DocenteService extends DocenteHelpers{
     }
 
     public async updateOneDocente(req:Request, res:Response){       
-        const old_lan:any = await super.GetDocente({
+        const docentedb:any = await super.GetDocente({
             _id: { $nin: [req.params.id] }
         });
 
-        if( old_lan.length === 0 ){
+        if( docentedb.length === 0 ){
 
             Docente.findByIdAndUpdate(req.params.id,req.body,(err:Error)=>{
                 if(err){

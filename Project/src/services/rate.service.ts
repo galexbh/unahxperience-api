@@ -39,8 +39,8 @@ export class RateService extends RateHelpers{
         Rate.aggregate([
             {
                 "$lookup":{
-                    from: "Estudiantes",
-                    localField:"Estudiante",
+                    from: "estudiantes",
+                    localField:"EstudianteID",
                     foreignField:"_id",
                     as: "Estudiante"
                 }

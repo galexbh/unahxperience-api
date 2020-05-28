@@ -42,8 +42,8 @@ export class EstudianteService extends EstudianteHelpers{
         Estudiante.aggregate([
             {
                 "$lookup":{
-                    from: "Carreras",
-                    localField:"Carrera",
+                    from: "carreras",
+                    localField:"CarreraID",
                     foreignField:"_id",
                     as: "c"
                 }
@@ -61,7 +61,7 @@ export class EstudianteService extends EstudianteHelpers{
         const estudiante= new Estudiante(req.body); 
         const carreraServices: CarreraService = new CarreraService();
 
-        const CarreraExistedb: any = await carreraServices.getOneCarrera({_id: estudiante.Carrera});
+        const CarreraExistedb: any = await carreraServices.getOneCarrera({_id: estudiante.CarreraID});
         const NickRepitdb: any = await super.GetOneEstudiante({NickName: estudiante.NickName});
         const EmailRepitdb: any = await super.GetOneEstudiante({Email: estudiante.Email}); 
 

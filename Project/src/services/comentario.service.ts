@@ -41,10 +41,10 @@ export class ComentarioService extends ComentarioHelpers{
         Comentario.aggregate([
             {
                 "$lookup":{
-                    from: "Estudiantes",
-                    localField:"Estudiante",
+                    from: "docentes",
+                    localField:"DocenteID",
                     foreignField:"_id",
-                    as: "Estudent"
+                    as: "docent"
                 }
             }
         ],(err:Error, data:any)=>{
