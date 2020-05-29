@@ -4,13 +4,13 @@ import {ICurso} from "./curso.model"
 
 export interface ISolicitud extends mongoose.Document { 
     Name: string;
-    LastName: number;
+    LastName: string;
     CursoID: ICurso;
     EstudianteID: IEstudiante;
 }
 
 const SolicitudSchema = new mongoose.Schema({
-    name: { type: String, required: true},
+    Name: { type: String, required: true},
     LastName: {type: String, required: true},
     CursoID: {type: mongoose.Schema.Types.ObjectId, ref: "Curso"},
     EstudianteID: { type: mongoose.Schema.Types.ObjectId, ref: "Estudiante" }

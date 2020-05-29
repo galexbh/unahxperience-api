@@ -1,0 +1,3 @@
+Descarga insomnia https://insomnia.rest/download/
+
+Realiza import de los endpoints.
