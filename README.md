@@ -15,7 +15,7 @@ El proyecto consiste en una plataforma web orienta a estudiantes de la universid
 
 * **David Antonio Aguirre** - *20151020035* - [daguirre7](https://github.com/daguirre7)
 * **Sara Isabel Domínguez** - *20161005072* - [CruelLink](https://github.com/CruelLink)
-* **Gabriel Alexander Barrientos** - *20181000058* - [VanhelsingX3](https://github.com/VanhelsingX3)
+* **Gabriel Alexander Barrientos** - *20181000058* - [galexbh](https://github.com/galexbh)
 
 ## Necesario/Necessary 📄
 
