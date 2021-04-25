@@ -1,11 +1,10 @@
 # PROGRAMACIÓN ORIENTADA A OBJETOS
 
-UNAH (Universidad Autónoma de Honduras) - Proyecto para la clase de Programación Orientada a Objetos.
+UNAH (Universidad Autónoma de Honduras) - Project for the Object Oriented Programming class.
 
+This project has a REST API using [Express.js](https://expressjs.com/es/) connected to a [MongoDB](https://www.mongodb.com/cloud/atlas) cluster and is coded in [Typescript](https://www.typescriptlang.org/).
 
-El presente proyecto cuenta con una REST API usando [Express.js](https://expressjs.com/es/) conectado con un clúster de [MongoDB](https://www.mongodb.com/cloud/atlas) y esta codificado en [Typescript](https://www.typescriptlang.org/).
-
-El proyecto consiste en una plataforma web orienta a estudiantes de la universidad para que puedan obtener una retroalimentación de consulta practica y pueda realizar evaluaciones de desempeño docente. 
+The project consists of a web platform oriented to students of the university so that they can get feedback from practical consultation and can perform evaluations of teaching performance. 
 
 ## Docente/Teacher 👨‍💻
 
@@ -19,4 +18,4 @@ El proyecto consiste en una plataforma web orienta a estudiantes de la universid
 
 ## Necesario/Necessary 📄
 
-[Node.js](https://nodejs.org/es/) versión 12.X.X en adelante.
+[Node.js](https://nodejs.org/es/) version 12.X.X onwards.
